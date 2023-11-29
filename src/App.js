@@ -1,59 +1,33 @@
-import React, { useState } from 'react';
-import './App.css';
+import { useState } from "react";
+import TodoInput from "./TodoInput";
+import TodoList from "./TodoList";
+import "./App.css";
 
-function App() {
+const App = () => {
   const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState('');
+  const [todo, setTodo] = useState("");
 
   const addTodo = () => {
-    if (newTodo.trim() !== '') {
-      setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
-      setNewTodo('');
+    if (todo !== "") {
+      setTodos([...todos, todo]);
+      setTodo("");
     }
   };
 
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = (text) => {
+    const newTodos = todos.filter((todo) => {
+      return todo !== text;
+    });
+    setTodos(newTodos);
   };
 
   return (
     <div className="App">
-      <h1>Todo App</h1>
-      <div>
-        <input
-          type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Add a new todo"
-        />
-        <button onClick={addTodo}>Add Todo</button>
-      </div>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-            />
-            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
-              {todo.text}
-            </span>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <h1>React Todo App</h1>
+      <TodoInput todo={todo} setTodo={setTodo} addTodo={addTodo} />
+      <TodoList list={todos} remove={deleteTodo} />
     </div>
   );
-}
+};
 
 export default App;
-
